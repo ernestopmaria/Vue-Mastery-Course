@@ -2,6 +2,7 @@
 import { ref, onMounted, watchEffect, computed } from 'vue'
 import EventService from '@/services/EventService'
 import EventCard from '@/components/EventCard.vue'
+import router from '@/router'
 
 const events = ref(null)
 
@@ -25,6 +26,7 @@ onMounted(() => {
         totalEvents.value = response.headers['x-total-count']
       })
       .catch((error) => {
+        router.push({ name: 'network-error' })
         console.log(error)
       })
   })
@@ -36,21 +38,11 @@ onMounted(() => {
   <div class="events">
     <EventCard v-for="event in events" :key="event.id" :event="event" />
     <div class="pagination">
-      <RouterLink
-        :to="{ name: 'event-list', query: { page: page - 1 } }"
-        rel="prev"
-        v-if="page !== 1"
-        id="page-prev"
-      >
+      <RouterLink :to="{ name: 'event-list', query: { page: page - 1 } }" rel="prev" v-if="page !== 1" id="page-prev">
         &#60; Prev
       </RouterLink>
 
-      <RouterLink
-        :to="{ name: 'event-list', query: { page: page + 1 } }"
-        rel="next"
-        v-if="hasNextPage"
-        id="page-next"
-      >
+      <RouterLink :to="{ name: 'event-list', query: { page: page + 1 } }" rel="next" v-if="hasNextPage" id="page-next">
         Next &#62;
       </RouterLink>
     </div>

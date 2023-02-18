@@ -1,10 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref, onMounted } from 'vue'
-
 import EventService from '@/services/EventService'
+import router from '@/router'
 
-const event = ref([])
+const event = ref()
 const props = defineProps({
   id: {
     required: true,
@@ -16,13 +16,19 @@ onMounted(async () => {
       event.value = response.data
     })
     .catch((err) => {
-      console.log(err)
+      if (err.response && err.response.status == 404) {
+        router.push({
+          name: '404Resource',
+          params: { resource: 'event' },
+        })
+      } else {
+        router.push({ name: 'network-error' })
+      }
     })
 })
 </script>
 
 <template>
-  <span v-if="!event">Carregando...</span>
   <div v-if="event">
     <h1>{{ event.title }}</h1>
     <div id="nav">
