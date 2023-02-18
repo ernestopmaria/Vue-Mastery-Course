@@ -15,5 +15,5 @@ defineProps({
       {{ event.location }}
     </p>
     <p>{{ event.description }}</p>
-</div>
+  </div>
 </template>

@@ -8,7 +8,7 @@
 </script>
 
 <template>
-    <div>
-        <p>Regstration form here</p>
-</div>
+  <div>
+    <p>Regstration form here</p>
+  </div>
 </template>
