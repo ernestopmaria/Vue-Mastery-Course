@@ -1,4 +1,8 @@
+import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+
+import nProgress from 'nprogress'
+
 import EventListView from '../views/EventListView.vue'
 import Layout from '../views/event/Layout.vue'
 import Edit from '../views/event/Edit.vue'
@@ -7,6 +11,10 @@ import Register from '../views/event/Register.vue'
 import AboutView from '../views/AboutView.vue'
 import NotFound from '../views/NotFound.vue'
 import NetworkError from '../views/NetworkError.vue'
+import EventService from '../services/EventService'
+
+export const events = ref()
+export const totalEvents = ref(0)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +23,28 @@ const router = createRouter({
       path: '/',
       name: 'event-list',
       component: EventListView,
-      props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+      props: (route) => ({
+        page: parseInt(route.query.page) || 1,
+      }),
+      beforeEnter(routeTo, routeFrom, next) {
+        nProgress.start()
+        EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+          .then((response) => {
+            events.value = response.data
+            totalEvents.value = response.headers['x-total-count']
+            next((comp) => {
+              comp.events.value = response.data
+              comp.totalEvents.value = response.headers['x-total-count']
+            })
+          })
+          .catch((error) => {
+            next({ name: 'network-error' })
+            console.log(error)
+          })
+          .finally(() => {
+            nProgress.done()
+          })
+      },
     },
     {
       path: '/events/:id',

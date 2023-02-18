@@ -1,11 +1,18 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import router from '@/router'
-/* const props = defineProps({
+import { GStore } from '../../main'
+
+const props = defineProps({
     event: {},
-}) */
+})
 
 function register() {
+    GStore.flashMessage =
+        'You are successfully registered for  ' + props.event.title
+    setTimeout(() => {
+        GStore.flashMessage = ''
+    }, 3000)
     router.push({
         name: 'event-details',
     })

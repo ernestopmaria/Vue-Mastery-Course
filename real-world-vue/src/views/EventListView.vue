@@ -1,35 +1,36 @@
 <script setup>
-import { ref, onMounted, watchEffect, computed } from 'vue'
-import EventService from '@/services/EventService'
+import { computed } from 'vue'
+import nProgress from 'nprogress'
+import { events, totalEvents } from '../router/index'
+import { onBeforeRouteUpdate } from 'vue-router'
 import EventCard from '@/components/EventCard.vue'
-import router from '@/router'
-
-const events = ref(null)
+import EventService from '@/services/EventService'
 
 const props = defineProps({
   page: {
     type: Number,
   },
 })
-var totalEvents = ref(0)
+onBeforeRouteUpdate(async (routeTo) => {
+  nProgress.start()
+  EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+    .then((response) => {
+      events.value = response.data
+      this.console.log(events.value)
+      totalEvents.value = response.headers['x-total-count']
+    })
+    .catch((error) => {
+      console.log(error)
+      return { name: 'network-error' }
+    })
+    .finally(() => {
+      nProgress.done()
+    })
+})
+
 const hasNextPage = computed(() => {
   var totalPages = Math.ceil(totalEvents.value / 2)
   return props.page < totalPages
-})
-
-onMounted(() => {
-  watchEffect(() => {
-    events.value = null
-    EventService.getEvents(2, props.page)
-      .then((response) => {
-        events.value = response.data
-        totalEvents.value = response.headers['x-total-count']
-      })
-      .catch((error) => {
-        router.push({ name: 'network-error' })
-        console.log(error)
-      })
-  })
 })
 </script>
 
