@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import router from '@/router'
-import { GStore } from '../../main'
+import GStore from '../../store'
 
 const props = defineProps({
     event: {},

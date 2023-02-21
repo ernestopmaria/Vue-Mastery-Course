@@ -1,31 +1,12 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { ref, onMounted } from 'vue'
-import EventService from '@/services/EventService'
-import router from '@/router'
+import GStore from '@/store'
 
-const event = ref()
-const props = defineProps({
-  id: {
-    required: true,
-  },
-})
-onMounted(async () => {
-  await EventService.getEvent(props.id)
-    .then((response) => {
-      event.value = response.data
-    })
-    .catch((err) => {
-      if (err.response && err.response.status == 404) {
-        router.push({
-          name: '404Resource',
-          params: { resource: 'event' },
-        })
-      } else {
-        router.push({ name: 'network-error' })
-      }
-    })
-})
+const event = GStore.event
+
+/* onMounted(async () => {
+  console.log(GStore.event)
+}) */
 </script>
 
 <template>

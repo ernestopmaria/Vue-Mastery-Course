@@ -12,8 +12,8 @@ import AboutView from '../views/AboutView.vue'
 import NotFound from '../views/NotFound.vue'
 import NetworkError from '../views/NetworkError.vue'
 import EventService from '../services/EventService'
+import GStore from '@/store'
 
-export const events = ref()
 export const totalEvents = ref(0)
 
 const router = createRouter({
@@ -27,10 +27,9 @@ const router = createRouter({
         page: parseInt(route.query.page) || 1,
       }),
       beforeEnter(routeTo, routeFrom, next) {
-        nProgress.start()
         EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
           .then((response) => {
-            events.value = response.data
+            GStore.event = response.data
             totalEvents.value = response.headers['x-total-count']
             next((comp) => {
               comp.events.value = response.data
@@ -41,9 +40,6 @@ const router = createRouter({
             next({ name: 'network-error' })
             console.log(error)
           })
-          .finally(() => {
-            nProgress.done()
-          })
       },
     },
     {
@@ -51,6 +47,22 @@ const router = createRouter({
       name: 'event-layout',
       props: true,
       component: Layout,
+      beforeEnter: (to) => {
+        return EventService.getEvent(to.params.id)
+          .then((response) => {
+            GStore.event = response.data
+          })
+          .catch((error) => {
+            if (error.response && error.response.status == 404) {
+              return {
+                name: '404Resource',
+                params: { resource: 'event' },
+              }
+            } else {
+              return { name: 'NetworkError' }
+            }
+          })
+      },
       children: [
         {
           path: '',
@@ -113,6 +125,14 @@ const router = createRouter({
       component: NetworkError,
     },
   ],
+})
+
+router.beforeEach(() => {
+  nProgress.start()
+})
+
+router.afterEach(() => {
+  nProgress.done()
 })
 
 export default router

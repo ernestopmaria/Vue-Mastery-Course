@@ -1,30 +1,29 @@
 <script setup>
 import { computed } from 'vue'
-import nProgress from 'nprogress'
-import { events, totalEvents } from '../router/index'
+
+import { totalEvents } from '../router/index'
 import { onBeforeRouteUpdate } from 'vue-router'
 import EventCard from '@/components/EventCard.vue'
 import EventService from '@/services/EventService'
+import GStore from '@/store'
 
+let events = GStore.event
 const props = defineProps({
   page: {
     type: Number,
   },
 })
+
 onBeforeRouteUpdate(async (routeTo) => {
-  nProgress.start()
-  EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+  await EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
     .then((response) => {
-      events.value = response.data
-      this.console.log(events.value)
+      events = response.data
+
       totalEvents.value = response.headers['x-total-count']
     })
     .catch((error) => {
       console.log(error)
       return { name: 'network-error' }
-    })
-    .finally(() => {
-      nProgress.done()
     })
 })
 

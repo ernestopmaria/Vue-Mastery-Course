@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { GStore } from './main'
+import GStore from './store'
 </script>
 
 <template>
