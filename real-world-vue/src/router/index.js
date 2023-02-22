@@ -8,7 +8,6 @@ import Layout from '../views/event/Layout.vue'
 import Edit from '../views/event/Edit.vue'
 import Details from '../views/event/Details.vue'
 import Register from '../views/event/Register.vue'
-import AboutView from '../views/AboutView.vue'
 import NotFound from '../views/NotFound.vue'
 import NetworkError from '../views/NetworkError.vue'
 import EventService from '../services/EventService'
@@ -78,6 +77,7 @@ const router = createRouter({
           path: 'edit',
           name: 'event-edit',
           component: Edit,
+          meta: { requireAuth: true },
         },
       ],
     },
@@ -105,8 +105,8 @@ const router = createRouter({
     {
       path: '/about-us',
       name: 'about',
-      component: AboutView,
-      alias: '/about',
+      component: () =>
+        import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
     },
     {
       path: '/:catchAll(.*)',
@@ -125,10 +125,37 @@ const router = createRouter({
       component: NetworkError,
     },
   ],
+
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      // <----
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
 })
 
-router.beforeEach(() => {
+// eslint-disable-next-line no-unused-vars
+router.beforeEach((to, from) => {
   nProgress.start()
+
+  const notAuthorized = true
+  if (to.meta.requireAuth && notAuthorized) {
+    GStore.flashMessage = 'Sorry, you are not authorized to view this page'
+
+    setTimeout(() => {
+      GStore.flashMessage = ''
+    }, 3000)
+
+    if (from.href) {
+      // <--- If this navigation came from a previous page.
+      return false
+    } else {
+      // <--- Must be navigating directly
+      return { path: '/' } // <--- Push navigation to the root route.
+    }
+  }
 })
 
 router.afterEach(() => {
