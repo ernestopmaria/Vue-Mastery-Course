@@ -41,4 +41,5 @@ span {
 
 .completed {
     text-decoration: line-through;
-}</style>
+}
+</style>
