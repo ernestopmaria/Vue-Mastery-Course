@@ -1,8 +1,5 @@
 <template>
-  <router-link
-    class="event-link"
-    :to="{ name: 'EventDetails', params: { id: event.id } }"
-  >
+  <router-link class="event-link" :to="{ name: 'EventDetails', params: { id: event.id } }">
     <div class="event-card">
       <span>@{{ event.time }} on {{ event.date }}</span>
       <h4>{{ event.title }}</h4>
@@ -11,15 +8,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from "vue";
+import { EventItem } from "@/types";
 export default defineComponent({
   props: {
     event: {
-      type: Object,
+      type: Object as PropType<EventItem>,
       required: true
     }
   }
-})
+});
 </script>
 
 <style scoped>

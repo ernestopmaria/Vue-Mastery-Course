@@ -7,24 +7,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { EventItem } from '../types'
-import EventService from '../services/EventService'
+import { defineComponent } from "vue";
+import { EventItem } from "../types";
+import EventService from "../services/EventService";
 export default defineComponent({
-  props: ['id'],
+  props: ["id"],
   data() {
     return {
       event: {} as EventItem
-    }
+    };
   },
   created() {
     EventService.getEvent(this.id)
       .then(response => {
-        this.event = response.data
+        this.event = response.data;
       })
       .catch(error => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   }
-})
+});
 </script>
