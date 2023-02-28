@@ -3,6 +3,7 @@
     <img alt="Vue logo" src="../assets/logo.png" />
     <AppHeader />
     <RandomNumber />
+    <LoginForm />
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 // @ is an alias to /src
 
 import AppHeader from "@/components/AppHeader.vue";
+import LoginForm from "@/components/LoginForm.vue";
 import RandomNumber from "@/components/RandomNumber.vue";
 
 export default {
@@ -17,6 +19,7 @@ export default {
   components: {
     AppHeader,
     RandomNumber,
+    LoginForm,
   },
 };
 </script>
