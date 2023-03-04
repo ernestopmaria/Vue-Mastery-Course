@@ -4,6 +4,7 @@
     <AppHeader />
     <RandomNumber />
     <LoginForm />
+    <MessageDisplay />
   </div>
 </template>
 
@@ -12,6 +13,7 @@
 
 import AppHeader from "@/components/AppHeader.vue";
 import LoginForm from "@/components/LoginForm.vue";
+import MessageDisplay from "@/components/MessageDisplay.vue";
 import RandomNumber from "@/components/RandomNumber.vue";
 
 export default {
@@ -20,6 +22,7 @@ export default {
     AppHeader,
     RandomNumber,
     LoginForm,
+    MessageDisplay,
   },
 };
 </script>
