@@ -1,6 +1,6 @@
 <script setup>
 
-const story = await useStoryblok('home', { version: 'draft', resolve_relations: 'featuredProjects.projects' },
+const story = await useStoryblok('home', { version: useRoute().query._storyblok?"draft":"published", resolve_relations: 'featuredProjects.projects' },
     {
     resolveRelations:'featuredProjects.projects'
 })
