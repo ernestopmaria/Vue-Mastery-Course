@@ -1,11 +1,13 @@
 <script setup>
 import SpacesCalc from './components/SpacesCalc.vue';
+import NumberOfEvent from './components/NumberOfEvent.vue'
 
 </script>
 
 <template>
   <div>
     <SpacesCalc />
+    <NumberOfEvent/>
   </div>
 </template>
 
